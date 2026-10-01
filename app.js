@@ -21,6 +21,7 @@
   const noteForm = document.querySelector('#note-form');
   const noteInput = document.querySelector('#note-input');
   const priceInput = document.querySelector('#price-input');
+  const renewalInput = document.querySelector('#renewal-input');
   const noteList = document.querySelector('#note-list');
   const noteError = document.querySelector('#note-error');
   const saveStatus = document.querySelector('#save-status');
@@ -71,6 +72,15 @@
     return price.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   }
 
+  // The server stores the date as YYYY-MM-DD with no time zone. Formatting it
+  // as UTC keeps "2026-10-15" from showing as Oct 14 in a US browser.
+  function formatRenewalDate(isoDate) {
+    const [year, month, day] = isoDate.split('-').map(Number);
+    return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString(undefined, {
+      timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric',
+    });
+  }
+
   function renderNotes() {
     noteList.replaceChildren();
     emptyState.hidden = notes.length > 0;
@@ -85,6 +95,13 @@
       const noteText = document.createElement('span');
       // textContent, never innerHTML: the server does not get to write HTML into the page either.
       noteText.textContent = `${note.service} — ${formatPrice(note.price)}/mo`;
+      // EARS O-HW5-1: WHERE an entry includes a renewal date, show it alongside the service.
+      if (note.renewal_date) {
+        const renewal = document.createElement('time');
+        renewal.dateTime = note.renewal_date;
+        renewal.textContent = `Renews ${formatRenewalDate(note.renewal_date)}`;
+        noteText.append(renewal);
+      }
       const deleteButton = document.createElement('button');
       deleteButton.type = 'button';
       deleteButton.textContent = 'Delete';
@@ -120,6 +137,7 @@
     const service = noteInput.value.trim();
     const characterCount = Array.from(service).length;
     const price = Number(priceInput.value);
+    const renewalDate = renewalInput.value;
 
     if (characterCount < 1 || characterCount > 200) {
       noteError.textContent = 'Enter a service name containing 1–200 characters.';
@@ -135,13 +153,24 @@
       priceInput.focus();
       return;
     }
+    // A date input reports a half-typed date (e.g. month only) as an empty
+    // value with badInput set; catch it here so it isn't silently dropped.
+    if (renewalInput.validity.badInput) {
+      noteError.textContent = 'Enter a complete renewal date, or leave it empty.';
+      renewalInput.setAttribute('aria-invalid', 'true');
+      saveStatus.textContent = '';
+      renewalInput.focus();
+      return;
+    }
     noteInput.removeAttribute('aria-invalid');
     priceInput.removeAttribute('aria-invalid');
+    renewalInput.removeAttribute('aria-invalid');
     noteError.textContent = '';
 
     try {
       // Only clear the inputs after the server confirms, same rule as HW3.
-      if (!(await saveNote({ service, price }))) return;
+      const entry = renewalDate ? { service, price, renewal_date: renewalDate } : { service, price };
+      if (!(await saveNote(entry))) return;
     } catch {
       showError('Could not reach the server. Your entry is still here; try again.');
       return;
@@ -149,6 +178,7 @@
     await refresh();
     noteInput.value = '';
     priceInput.value = '';
+    renewalInput.value = '';
     noteInput.focus();
     saveStatus.textContent = 'Subscription saved.';
   });
