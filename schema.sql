@@ -8,5 +8,9 @@ CREATE TABLE IF NOT EXISTS entries (
   -- Backstop for the Worker's price rule: the database refuses a non-positive
   -- price even if a future endpoint forgets to check.
   price REAL NOT NULL CHECK (price > 0),
+  -- HW5 (F-05): optional renewal date, YYYY-MM-DD. NULL means "not given".
+  -- A database created before HW5 gets this column from
+  -- migrations/0001_add_renewal_date.sql instead.
+  renewal_date TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );

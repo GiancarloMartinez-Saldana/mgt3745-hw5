@@ -24,6 +24,21 @@ const ALLOWED_ORIGINS = [
 
 const SERVICE_MAX_CHARS = 200;
 
+// A renewal date is optional. When present it must be a real calendar day in
+// YYYY-MM-DD form, the format <input type="date"> sends. Returns the date to
+// store, null for "no date", or undefined when the value is not acceptable.
+function parseRenewalDate(value) {
+  if (value === undefined || value === null || value === "") return null;
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  // Date.UTC rolls 2026-02-30 over to March 2; a real date survives the round trip.
+  const isRealDay = date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && date.getUTCDate() === day;
+  return isRealDay ? value : undefined;
+}
+
 function corsHeaders(request) {
   const headers = {
     "access-control-allow-methods": "GET, POST, DELETE, OPTIONS",
@@ -74,7 +89,7 @@ async function handle(request, env, cors) {
   // (a grader, a link without /entries) sees the entries instead of a 404.
   if (request.method === "GET" && (url.pathname === "/entries" || url.pathname === "/")) {
     const { results } = await env.DB.prepare(
-      "SELECT id, service, price, created_at FROM entries ORDER BY id").all();
+      "SELECT id, service, price, renewal_date, created_at FROM entries ORDER BY id").all();
     return Response.json(results, { headers: cors });
   }
 
@@ -107,8 +122,18 @@ async function handle(request, env, cors) {
       return new Response("price must be a number greater than 0", { status: 400, headers: cors });
     }
 
-    await env.DB.prepare("INSERT INTO entries (service, price) VALUES (?, ?)")
-      .bind(service, price).run();
+    // EARS O-HW5-1 / E-HW5-2 / U-HW5-3 (FEATURES.md, HW5): WHERE an entry
+    // includes a renewal date, THE SYSTEM SHALL display it; IF the renewal date
+    // is not a real calendar date in YYYY-MM-DD form, THEN THE SYSTEM SHALL
+    // reject the entry and say why. No date at all is still a valid entry.
+    const renewalDate = parseRenewalDate(body.renewal_date);
+    if (renewalDate === undefined) {
+      return new Response("renewal date must be a real date in YYYY-MM-DD form", { status: 400, headers: cors });
+    }
+
+    // EARS S-HW5-4: the date is stored with the rest of the entry, on the server.
+    await env.DB.prepare("INSERT INTO entries (service, price, renewal_date) VALUES (?, ?, ?)")
+      .bind(service, price, renewalDate).run();
     return new Response(null, { status: 201, headers: cors });
   }
 
