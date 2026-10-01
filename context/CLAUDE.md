@@ -5,7 +5,8 @@ Status: ACTIVE in Module 3.
 This project is a subscription cost dashboard: users enter streaming
 services and prices, and the app displays a running monthly total. As of
 HW4 the subscriptions live in Cloudflare D1 behind `worker.js` (ADR-002);
-`app.js` reaches them with `fetch`.
+`app.js` reaches them with `fetch`. HW5 adds an optional renewal date
+(FEATURES.md, rows marked [HW5 DELEGATE]) and code evals in `evals/`.
 
 Read first: PROJECT.md, FEATURES.md, ARCHITECTURE.md, STANDARDS.md, TOOLS.md, STYLE.md. Do not read /curiosity unless asked.
 
@@ -28,5 +29,9 @@ These are the same rules as STANDARDS.md, restated as instructions for an agent.
 8. Handle every failed response on the page with a message the user can read, and keep their input. Never throw to the console.
 
 9. Every new Worker endpoint implements an EARS statement in FEATURES.md. Quote the statement in a comment above it.
+
+10. A change to the D1 table ships as a new file in `migrations/` plus the same change in `schema.sql`. Never edit the remote table by hand, and say in the README that the migration runs before `npm run deploy`.
+
+11. Colors, fonts, the minimum font size, the minimum target size and the radius in `styles.css` come from a CSS variable named after a STYLE.md token. Layout spacing is not tokenized. A new token is added to STYLE.md and `:root` together.
 
 When unsure, ask in a comment or in the chat rather than guessing, and say what you could not verify.

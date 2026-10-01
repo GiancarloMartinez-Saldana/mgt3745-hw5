@@ -1,71 +1,103 @@
-# Entries: The First Delegated Feature
-
-> Replace this title and every *italic prompt* with your own words. Six
-> sections, in this order: What, See It Work, How to Run, Status, Links,
-> AI Use. GitHub renders this page; it can show, not only tell.
+# Cost Tracker: The First Delegated Feature
 
 ## What
 
-*HW4 repository: [link it here](https://github.com/YOUR-USER/mgt3745-hw4)*
+HW4 repository: [GiancarloMartinez-Saldana/mgt3745-hw4](https://github.com/GiancarloMartinez-Saldana/mgt3745-hw4)
 
-*One paragraph naming the problem, the user, and the feature, with links to
-[PROJECT.md](context/PROJECT.md) and [FEATURES.md](context/FEATURES.md).
-One sentence on where data now lives and why (ADR-002).*
+People who stream lose track of what they pay for. Both people I interviewed
+guessed their subscription count too low ([PROJECT.md](context/PROJECT.md),
+[USERS.md](context/USERS.md)). This page is a subscription dashboard
+(F-01/F-05 in [FEATURES.md](context/FEATURES.md)). You enter each service and
+its monthly price, and it keeps a running monthly total. **HW5 delegates one
+feature: an optional renewal date shown next to each service.** It's HW3
+statement #5, which was marked FAIL in HW3 and HW4 because it was never built.
+Entries live in Cloudflare D1 behind a small Worker, so they survive a cleared
+cache and show up in any browser. The renewal date is stored there too, not in
+the browser
+([ADR-002](context/ARCHITECTURE.md#adr-002-entries-move-from-localstorage-to-cloudflare-d1)).
 
 ## See It Work
 
-*A GIF or screenshot in `/docs` showing an entry surviving a cleared cache
-or appearing in a second browser. Evidence and storefront at once.*
+The renewal date (HW5). Netflix and Spotify were saved with a date, and the
+others without one. The page was served on `127.0.0.1:5500` against the local
+Worker:
 
-![See it work](docs/see-it-work.gif)
+![Subscription dashboard: Netflix $20/mo "Renews Oct 15, 2026", Hulu, Max, Spotify $15/mo "Renews Nov 1, 2026", Peacock; total $73.00](docs/renewal-date.png)
+
+Surviving a cleared cache (HW4, deployed). Three subscriptions are saved, site
+data is cleared, the page reloads, and all three come back from the server:
+
+![Deployed subscription dashboard: three subscriptions saved, site data cleared, page reloaded, all three still there with a $48.00 total](docs/see-it-work-deployed.gif)
 
 ```mermaid
 flowchart LR
   A[Page loads] --> B[GET /entries]
-  B --> C[render]
-  D[User submits] --> E[POST /entries]
+  B -->|200| C[render list, dates, total]
+  D[User submits service + price + optional date] --> V{page validation}
+  V -->|bad| F[showError on page]
+  V -->|ok| E[POST /entries]
   E -->|201| B
-  E -->|400| F[showError]
-  B -->|network fails| F
+  E -->|400 + reason| F
+  G[User clicks Delete] --> H[DELETE /entries/:id]
+  H -->|204| B
+  B -->|500 or network fails| F
 ```
 
 ## How to Run
 
-Deployed: *`https://mgt3745-hw4.YOUR-SUBDOMAIN.workers.dev/entries`*
+Deployed: <https://mgt3745-hw4.mgt3745-hw4-giancarlo.workers.dev/entries>. It returns `[]` or a list of entries, never an error.
 
 From a fresh Codespace:
 
 1. Open the repository in a Codespace. The devcontainer installs xdg-utils and runs `npm install`.
-2. `npx wrangler login --device`, then follow [docs/SESSION_B_COMMANDS.md](docs/SESSION_B_COMMANDS.md)
-   to create the database, run the schema, and deploy.
-3. Paste the deployed URL into `app.js` as `API`.
-4. Right-click `index.html`, choose **Open with Live Server**.
+2. `npx wrangler login --device`. The database from HW4 already exists (its id is in `wrangler.toml`), so you don't create it again.
+3. **HW5, once, in this order:** `npm run db:migrate` adds the `renewal_date` column to the existing table. Then add this Codespace's Live Server origin (Ports tab, port 5500, like `https://<codespace-name>-5500.app.github.dev`) to `ALLOWED_ORIGINS` in `worker.js`. Then run `npm run deploy`. If you deploy before migrating, every save returns a 500.
+4. Right-click `index.html` and choose **Open with Live Server**. A page served from `localhost` or `127.0.0.1` talks to `npm run dev` instead of the deployed Worker.
 
-Run the code eval: `API=https://mgt3745-hw4.YOUR-SUBDOMAIN.workers.dev npm test`
+Run the code eval (7 tests; it deletes what it creates):
 
-![npm test passing](docs/npm-test.png)
+```bash
+API=https://mgt3745-hw4.mgt3745-hw4-giancarlo.workers.dev npm test
+```
 
-To run the Worker locally instead: `npm run dev` (port 8787, local D1 emulator).
+![npm test: 7 of 7 passing against the HW5 Worker run locally](docs/npm-test-local.png)
+
+To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --local --file=schema.sql`, then `npm run dev` (port 8787), then `API=http://127.0.0.1:8787 npm test`. Add `?serverDown` to the page URL to test the outage message.
 
 ## Status
 
 | Feature | EARS statement | Verdict |
 |---|---|---|
-| *Save an entry* | *WHEN a valid entry is submitted, THE SYSTEM SHALL store it* | *PASS* |
-| *Reject empty entry* | *IF text is missing, THEN THE SYSTEM SHALL reject with a reason* | *PASS* |
-| *Survive cleared cache* | *THE SYSTEM SHALL return stored entries on any device* | *PASS* |
-| *Network down* | *IF the server is unreachable, THE SYSTEM SHALL tell the user* | *CANNOT TEST YET* |
-| *Two clients, one table* | *...* | *DEFERRED (ADR-002)* |
+| **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS (local), was FAIL in HW3/HW4 |
+| **No date still saves (HW5)** | WHEN a valid subscription is submitted without a renewal date, THE SYSTEM SHALL store it and show it with no date | PASS (local) |
+| **Bad date rejected (HW5)** | IF a submitted renewal date is not a real calendar date in YYYY-MM-DD form, THEN THE SYSTEM SHALL reject the entry and say why | PASS (local) |
+| **Date on the server (HW5)** | THE SYSTEM SHALL store the renewal date on the server with the rest of the entry | PASS (local) |
+| Save a subscription | WHEN a valid subscription is submitted, THE SYSTEM SHALL store it on the server and confirm it on the page | PASS |
+| Reject a bad price | IF a submitted price is not a number greater than 0, THEN THE SYSTEM SHALL reject it and say why | PASS |
+| Reject a bad name | IF the service name is missing, empty, or longer than 200 characters, THEN THE SYSTEM SHALL reject it and say why | PASS |
+| Survive cleared cache | THE SYSTEM SHALL return stored subscriptions to any browser, including one whose site data was cleared | PASS |
+| Delete updates total | WHEN the user removes a subscription, THE SYSTEM SHALL delete it on the server so the total no longer includes it | PASS |
+| Network down / 500 / 400 | IF the server can't be reached or returns an error, THEN THE SYSTEM SHALL tell the user on the page | PASS |
+| Two clients, one table | Private per-user lists | DEFERRED (ADR-002 → ADR-003) |
 
-*Full verification table lives in [FEATURES.md](context/FEATURES.md).*
+"PASS (local)" means it was walked against the HW5 `worker.js` running under
+`npm run dev`. The deployed Worker gets the feature after step 3 of How to Run.
+The full tables are in [FEATURES.md → HW5: Verification](context/FEATURES.md#hw5-verification)
+and [HW4: Verification](context/FEATURES.md#hw4-verification). The evals and
+the error-analysis log are in [EVALS.md](context/EVALS.md).
 
 ## Delegation
 
-- [DDR-001](docs/DDR-001.md): *feature, tool, net hours*
-- [DDR-002](docs/DDR-002.md): *the HW4 Copilot delegation, written up*
-- [Comparison note](docs/COMPARISON.md)
+- [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. Net hours: ___
+- [DDR-002](docs/DDR-002.md): the HW4 delegation, written up. It was Claude Code, not Copilot; the DDR explains why.
+- [DDR-003](docs/DDR-003.md): renewal date integrated into the real app with Claude Code. Net hours: ___
+- [Comparison note](docs/COMPARISON.md), [checklist](docs/CHECKLIST.md), [judgment eval](docs/JUDGMENT.md)
+- What the tools were given: [delegated/PASTE.md](delegated/PASTE.md). What they returned: `delegated/*.zip`.
 
 ## Links
+
+- HW4 repository (as submitted): <https://github.com/GiancarloMartinez-Saldana/mgt3745-hw4>
+- Deployed Worker: <https://mgt3745-hw4.mgt3745-hw4-giancarlo.workers.dev/entries>
 
 Reading order for a stranger: [PROJECT.md](context/PROJECT.md) →
 [USERS.md](context/USERS.md) → [FEATURES.md](context/FEATURES.md) →
@@ -75,9 +107,11 @@ Reading order for a stranger: [PROJECT.md](context/PROJECT.md) →
 
 ## AI Use
 
-*Every delegation has a DDR under Delegation above. Hours spent on this assignment: ___.*
+Every delegation has a DDR under Delegation above. Session B (bolt.new and AI
+Studio) is DDR-001. The integration, the evals, and the first drafts of the
+HW5 context files and docs were done by Claude Code (DDR-003). It ran the
+tests and a browser walk itself, and the commits show what it changed. I
+reviewed the diff and filled the "You" column of [JUDGMENT.md](docs/JUDGMENT.md)
+without looking at its answers.
 
-*Retired text: Three proto-DDR questions. What did the agent write? What did you check,
-and how? What could you not fully verify, and what did you do about it?
-For the Worker specifically: name the thing you could not fully inspect.
-Hours spent: ___.*
+Hours spent on this assignment: ___.

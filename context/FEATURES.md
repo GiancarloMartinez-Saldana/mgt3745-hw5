@@ -78,7 +78,7 @@ I asked a reader (Claude) to check FEATURES.md against the "could two competent 
 | # | Acceptance statement | Result | Evidence / reason |
 |---|---|---|---|
 | 1 | Ubiquitous: no pirated content sources referenced in Safe pick / Something new flows | CANNOT TEST YET | Neither flow (F-02/F-03) was built this cycle; out of scope per ADR-001. |
-| 2 | Event-driven: adding a subscription updates total spend within 2 seconds | PASS | Added three subscriptions (netflix $20, hulu $13, spotify $15); total updated to $48.00 immediately on each addition. See [screenshot](docs/subscription-dashboard.png). |
+| 2 | Event-driven: adding a subscription updates total spend within 2 seconds | PASS | Added three subscriptions (netflix $20, hulu $13, spotify $15); total updated to $48.00 immediately on each addition. See [screenshot](../docs/subscription-dashboard.png). |
 | 3 | State-driven: "What should I watch?" disabled with zero entries | CANNOT TEST YET | This button belongs to the F-02/F-03 flow, not built this cycle. |
 | 4 | Unwanted: zero filter matches show a no-matches message | CANNOT TEST YET | Mood/format filter (F-03) not built this cycle. |
 | 5 | Optional: renewal date displayed alongside service when given | FAIL | No renewal date field exists in `index.html`/`app.js`. Genuine gap between Behavior step 1 and shipped code. |
@@ -143,3 +143,23 @@ other row in this file is context and must keep passing.
 
 Out of scope for HW5: reminders before a renewal, sorting by renewal date,
 editing an existing entry's date (delete and re-add instead).
+
+## HW5: Verification
+
+**How it was walked (October 1, 2026):** against `npm run dev` (the HW5
+`worker.js` on wrangler's local D1, after running
+`migrations/0001_add_renewal_date.sql` on a copy of the HW4 table), with the
+page served on `http://127.0.0.1:5500` and driven in Chromium by Playwright.
+`npm test` ran the same rows as code. The deployed Worker still runs the HW4
+code until the migration and deploy are done (README → How to Run), so the
+deployed walk is still to come.
+
+| Statement | HW4 verdict | HW5 verdict | Reason / evidence |
+|---|---|---|---|
+| O-HW5-1: renewal date shown when given (HW3 #5) | FAIL | PASS (local) | Netflix saved with 2026-10-15 shows "Renews Oct 15, 2026" under its price in a `<time datetime="2026-10-15">`. A browser set to Los Angeles time shows the same day, not Oct 14. See [docs/renewal-date.png](../docs/renewal-date.png). |
+| E-HW5-2: no date still saves, shown with no date | — | PASS (local) | Peacock saved with the date left empty: 201, row shows no "Renews" line, `renewal_date` is `null` in GET. eval #6. |
+| U-HW5-3: bad date rejected with a reason | — | PASS (local) | `2026-02-30`, `10/15/2026`, `2026-13-01` and the number `20261015` each return `400 renewal date must be a real date in YYYY-MM-DD form`, nothing stored (eval #7). A forced bad date on the page showed "Could not save: renewal date must be… Your entry is still here." and kept the typed name. |
+| S-HW5-4: date stored on the server | — | PASS (local) | A fresh browser context (no site data) shows all three renewal dates, because they come from GET, not the browser. eval #5. |
+| HTML in a name is not executed (with a date) | PASS | PASS (local) | `<img src=x onerror=alert(1)>` with a date saved: no `<img>` in the list. |
+| HW4 rows (order, store, price rule, missing name) | PASS | PASS (local) | evals #1–#4, unchanged assertions. |
+| Same evals against the HW4 Worker | — | 4 of 7 | The three HW5 tests fail on the HW4 Worker, so they test the feature, not the setup. |

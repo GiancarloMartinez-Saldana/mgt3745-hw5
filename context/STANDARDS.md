@@ -18,6 +18,10 @@ Status: ACTIVE in Module 3. Adapt these rules to your feature and follow them.
 
 8. **(HW4) Failures are shown, not thrown.** A failed request (unreachable server, 400, 500) is shown to the user on the page in plain words, and what they typed is kept. It is never left as an uncaught error in the console.
 
+9. **(HW5) Schema changes are migrations.** A new or changed column is a file in `migrations/`, run with `npm run db:migrate` before the Worker that needs it is deployed. `schema.sql` always describes a fresh database.
+
+10. **(HW5) Tokens, not values.** `styles.css` uses one CSS variable per STYLE.md token; no raw hex or font names outside `:root`. Layout spacing (margins, widths) is not a token.
+
 **Source of truth:** If STANDARDS.md and CLAUDE.md ever disagree, STANDARDS.md wins. It's written for a human to read and agree to first; CLAUDE.md is a restatement of the same rules for an agent, not an independent source of authority.
 
 ## Split Test
