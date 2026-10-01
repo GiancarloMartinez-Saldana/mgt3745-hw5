@@ -6,15 +6,22 @@ The first two are written and committed BEFORE any tool sees the spec.
 ## 1. RAT statement
 <!-- One sentence. The assumption that, if false, makes this build pointless,
      and what would show it is false. -->
-The riskiest assumption in delegating <feature> is that ...
+The riskiest assumption in delegating the renewal-date feature (F-05, FEATURES.md
+rows marked [HW5 DELEGATE]) is that a builder handed only my three page files will
+send the date through my Worker instead of inventing its own storage, because the
+Worker and the D1 table it needs are not in the paste; it is shown false if the
+tool's `app.js` keeps renewal dates in `localStorage` or in memory, so they vanish
+on a cleared cache (checklist question 5).
 
-## 2. Prediction Stake (before build, <date and time>)
+## 2. Prediction Stake (before build, October 1, 2026, committed before any tool saw the spec)
 <!-- At least one of each. Never edit the prediction text; add resolutions below it. -->
-- **Tight:** At least _ of _ EARS rows will pass on the tool's first output.
-  - Resolved <date>: _ of _.
+- **Tight:** At least 2 of the 4 [HW5 DELEGATE] EARS rows will pass on each tool's first output, and S-HW5-4 (stored on the server) will not pass on either.
+  - Resolved <date>: bolt _ of 4, AI Studio _ of 4. S-HW5-4: ...
 - **Loose:** bolt will follow STYLE.md tokens better than AI Studio.
   - Resolved <date>: ...
-- **Open:** The tool will introduce a dependency I did not ask for. Resolves when I read package.json.
+- **Open:** At least one tool will introduce a dependency or a framework (React, a date library, Tailwind) I did not ask for. Resolves when I read each zip's package.json and `<script>`/`<link>` tags.
+  - Resolved <date>: ...
+- **Tight (integration):** Integrating the feature into the real app will need a change outside the three page files (`worker.js` and `schema.sql` at least), which the delegation instruction forbade the tool from touching.
   - Resolved <date>: ...
 
 ## 3. Success criteria

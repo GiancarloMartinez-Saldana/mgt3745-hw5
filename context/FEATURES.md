@@ -128,3 +128,18 @@ HW4 moves F-01/F-05 storage from localStorage to Cloudflare D1 (ADR-002). These 
 I asked it to help me have arrows for clear visuals. It also helped me organize all my points to develop my kano hypotheses and other structural details. Lastly I made a new chat and dropped in all of the assignment info and what I wrote and asked it to be my peer because it is late on a Thursday (I hope this is allowed), and I knew it would be a more thorough check anyways.
 
 **HW4:** Claude Code (Anthropic's coding agent, run from claude.ai) drafted the HW4 statements and ran the verification walk above: `curl` against the local Worker, plus a scripted Playwright browser. The verdicts come from that run's output, not from reading the code. The deployed-URL walk is still mine to do.
+
+## HW5: The delegated feature (rows marked for the tool)
+
+**Feature:** F-05 renewal date. HW3 statement #5 has been FAIL since HW3
+because no renewal-date field was ever built. HW5 delegates it. The rows
+marked **[HW5 DELEGATE]** are the ones the tool is asked to implement; every
+other row in this file is context and must keep passing.
+
+- **O-HW5-1 (Optional) [HW5 DELEGATE]:** WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service in the dashboard list. *(HW3 #5, unchanged wording.)*
+- **E-HW5-2 (Event-driven) [HW5 DELEGATE]:** WHEN a valid subscription is submitted without a renewal date, THE SYSTEM SHALL store it and show it with no date, exactly as before.
+- **U-HW5-3 (Unwanted) [HW5 DELEGATE]:** IF a submitted renewal date is not a real calendar date in `YYYY-MM-DD` form, THEN THE SYSTEM SHALL reject the entry and say why.
+- **S-HW5-4 (Ubiquitous) [HW5 DELEGATE]:** THE SYSTEM SHALL store the renewal date on the server with the rest of the entry, so it survives a cleared cache like the name and price do (ADR-002).
+
+Out of scope for HW5: reminders before a renewal, sorting by renewal date,
+editing an existing entry's date (delete and re-add instead).
