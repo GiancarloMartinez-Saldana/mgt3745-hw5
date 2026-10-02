@@ -118,4 +118,4 @@ tests and a browser walk itself, and the commits show what it changed. I
 reviewed the diff and filled the "You" column of [JUDGMENT.md](docs/JUDGMENT.md)
 without looking at its answers.
 
-Hours spent on this assignment: 8.
+Hours spent on this assignment: 9.
