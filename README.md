@@ -22,7 +22,7 @@ The renewal date (HW5). Netflix and Spotify were saved with a date, and the
 others without one. The page was served on `127.0.0.1:5500` against the local
 Worker:
 
-![Subscription dashboard: Netflix $20/mo "Renews Oct 15, 2026", Hulu, Max, Spotify $15/mo "Renews Nov 1, 2026", Peacock; total $73.00](docs/renewal-date.png)
+![Subscription dashboard: Netflix $20/mo "Renews October 15, 2026", Hulu, Max, Spotify $15/mo "Renews November 1, 2026", Peacock; total $73.00](docs/renewal-date.png)
 
 Surviving a cleared cache (HW4, deployed). Three subscriptions are saved, site
 data is cleared, the page reloads, and all three come back from the server:
@@ -95,7 +95,7 @@ the error-analysis log are in [EVALS.md](context/EVALS.md).
 
 ## Delegation
 
-- [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. Net hours: −2 (neither output kept)
+- [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. bolt's output is the base of the shipped page files; each fix is a numbered Finding and its own commit. Net hours: −2 (neither output kept)
 - [DDR-002](docs/DDR-002.md): the HW4 delegation, written up. It was Claude Code, not Copilot; the DDR explains why.
 - [DDR-003](docs/DDR-003.md): renewal date integrated into the real app with Claude Code. Net hours: +5
 - [Comparison note](docs/COMPARISON.md), [checklist](docs/CHECKLIST.md), [judgment eval](docs/JUDGMENT.md)

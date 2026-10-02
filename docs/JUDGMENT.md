@@ -61,6 +61,15 @@ Both "?" answers were resolved after Claude, the Grader 2 author, explained
 worth naming: a second human grader would be a better test of the rewritten
 questions.
 
+**Re-checked after integrating bolt-001 (DDR-001).** Both columns graded the
+page files before bolt's output replaced them. After the replacement and
+fixes, questions 2–12 were re-checked against the new files and still hold:
+no `innerHTML`, `worker.js` unchanged, no raw hex outside `:root`, no new
+dependency, the date sent as `renewal_date` and read from GET, a server 400
+shown with its reason, display in UTC (tested in New York and Berlin), a
+labelled `type="date"` at `min-height: var(--target-min)`. Line numbers
+cited in the Grader 2 column refer to the earlier version.
+
 ## Grader 2 prompt (if a model)
 ```
 You are grading a code change against a yes/no rubric. The change adds an
