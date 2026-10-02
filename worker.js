@@ -19,7 +19,9 @@
 const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5500",
   "http://localhost:5500",
-  "https://supreme-engine-g5qr94rpx7rcx9q-5500.app.github.dev"
+  "https://supreme-engine-g5qr94rpx7rcx9q-5500.app.github.dev",
+  // HW5 Codespace (a new repository gets a new Codespace and a new origin).
+  "https://legendary-space-lamp-5vxx59g45jqxc4wj-5500.app.github.dev"
 ];
 
 const SERVICE_MAX_CHARS = 200;
