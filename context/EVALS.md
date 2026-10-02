@@ -44,12 +44,13 @@ the HW5 template. Sorted by count, then by source.
 |---|---|---|---|
 | Did not store the date on the server (S-HW5-4 fails against the Worker it was given) and did not ask, though the instruction said to | 2 | bolt, AI Studio | architecture |
 | Date field is a text box with a placeholder, not `type="date"` | 2 | bolt, AI Studio | STYLE |
+| Summary claimed S-HW5-4 was met because the date is in the POST body (bolt: "persists server-side") | 2 | bolt, AI Studio | cannot verify |
 | Touched files outside the three named (bolt: empty package-lock.json; AI Studio: 10 files) | 2 | bolt, AI Studio | scope |
 | AI Studio: React/Vite/Tailwind/Gemini/Express project added, 19 packages, none used | 1 | AI Studio | dependency |
+| AI Studio: summary says "across the three files" and never mentions the 10 extra files | 1 | AI Studio | scope |
 | AI Studio: `.env.example` asks for a `GEMINI_API_KEY` the feature never needs (a credential slot) | 1 | AI Studio | STANDARDS |
 | AI Studio: guessed the field name, sends both `renewalDate` and `renewal_date`, reads either | 1 | AI Studio | architecture |
 | AI Studio: against the HW4 Worker the date is silently dropped and the page still says "Subscription saved." | 1 | AI Studio | EARS |
-| bolt: sent only `renewalDate`; claimed it "persists server-side" | 1 | bolt | architecture |
 | bolt: date check rejects every valid date east of UTC (local midnight compared to UTC) | 1 | bolt | EARS |
 | bolt: `2026-13-45` throws "Invalid time value" in the console instead of showing a message | 1 | bolt | STANDARDS |
 | bolt: date text 0.9rem (below font-size-min 16px) and raw hex, not a token | 1 | bolt | STYLE |

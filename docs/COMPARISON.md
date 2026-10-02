@@ -11,7 +11,7 @@
 | Used STYLE.md tokens? | No: raw hex, 14.4px text | Added no styles of its own | Yes |
 | Added a dependency or framework? | No | Yes: 19 packages (React, Tailwind, Gemini SDK…) | No |
 | [HW5 DELEGATE] rows passing | 1 / 4 | 2 / 4 (4 / 4 on the HW5 Worker) | 4 / 4 (local) |
-| Noticed S-HW5-4 needs the server? | No: claimed it persists | Not in code; hedged ___ (chat) | Yes: added a column and a migration |
+| Noticed S-HW5-4 needs the server? | No: claimed it persists | No: claimed sending it in the POST was enough; did not ask | Yes: added a column and a migration |
 | Time from paste to usable output | ___ | ___ | about 1 hour, including tests |
 
 **Which I would delegate to again, and for what.** ___ (one paragraph: which
