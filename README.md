@@ -88,7 +88,7 @@ the error-analysis log are in [EVALS.md](context/EVALS.md).
 
 ## Delegation
 
-- [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. Net hours: ___
+- [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. Net hours: −2 (neither output kept)
 - [DDR-002](docs/DDR-002.md): the HW4 delegation, written up. It was Claude Code, not Copilot; the DDR explains why.
 - [DDR-003](docs/DDR-003.md): renewal date integrated into the real app with Claude Code. Net hours: ___
 - [Comparison note](docs/COMPARISON.md), [checklist](docs/CHECKLIST.md), [judgment eval](docs/JUDGMENT.md)
@@ -114,4 +114,4 @@ tests and a browser walk itself, and the commits show what it changed. I
 reviewed the diff and filled the "You" column of [JUDGMENT.md](docs/JUDGMENT.md)
 without looking at its answers.
 
-Hours spent on this assignment: ___.
+Hours spent on this assignment: 8.
