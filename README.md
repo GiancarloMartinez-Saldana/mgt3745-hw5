@@ -18,8 +18,14 @@ the browser
 
 ## See It Work
 
-The renewal date (HW5). Netflix and Spotify were saved with a date, and the
-others without one. The page was served on `127.0.0.1:5500` against the local
+The renewal date on the live page (HW5): a subscription saved with a renewal
+date shows "Renews …" under it and is still there after a reload, because the
+date comes back from the Worker, not the browser.
+
+![Live page: a subscription is saved with a renewal date, "Renews …" appears under it, and it is still there after the page reloads](docs/see-it-work-renewal.gif)
+
+A still of the same feature: Netflix and Spotify were saved with a date, and
+the others without one. The page was served on `127.0.0.1:5500` against the local
 Worker:
 
 ![Subscription dashboard: Netflix $20/mo "Renews October 15, 2026", Hulu, Max, Spotify $15/mo "Renews November 1, 2026", Peacock; total $73.00](docs/renewal-date.png)
