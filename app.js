@@ -38,10 +38,16 @@
   // U-HW5-3: a real calendar date in YYYY-MM-DD form, not just a string that
   // parses. Date() will happily accept "2024-02-31" and roll it over to March,
   // so we check that the round-tripped date matches what was typed.
+  // DDR-001 fix: bolt built local midnight and compared it in UTC, which
+  // rejected every valid date east of UTC and threw on month 13. Building
+  // and reading the date in UTC avoids both.
   function isValidRenewalDate(value) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-    const parsed = new Date(value + 'T00:00:00');
-    return parsed.toISOString().slice(0, 10) === value;
+    const [year, month, day] = value.split('-').map(Number);
+    const parsed = new Date(Date.UTC(year, month - 1, day));
+    return parsed.getUTCFullYear() === year
+      && parsed.getUTCMonth() === month - 1
+      && parsed.getUTCDate() === day;
   }
 
   async function loadNotes() {
@@ -81,9 +87,12 @@
     return price.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   }
 
+  // Same UTC rule as the check above, so the day shown is the day stored.
   function formatRenewalDate(dateString) {
-    const parsed = new Date(dateString + 'T00:00:00');
-    return parsed.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString(undefined, {
+      timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric',
+    });
   }
 
   function renderNotes() {
@@ -117,10 +126,12 @@
       listItem.append(noteText, deleteButton);
 
       // O-HW5-1: show the renewal date alongside the service when one was stored.
-      if (note.renewalDate) {
-        const dateLine = document.createElement('span');
+      // DDR-001 fix: the Worker stores and returns renewal_date, not renewalDate.
+      if (note.renewal_date) {
+        const dateLine = document.createElement('time');
         dateLine.className = 'renewal-date';
-        dateLine.textContent = `Renews ${formatRenewalDate(note.renewalDate)}`;
+        dateLine.dateTime = note.renewal_date;
+        dateLine.textContent = `Renews ${formatRenewalDate(note.renewal_date)}`;
         listItem.append(dateLine);
       }
 
@@ -160,6 +171,15 @@
       priceInput.focus();
       return;
     }
+    // DDR-001 fix: with type="date", a half-typed date reaches here as an
+    // empty value with badInput set; without this it would save with no date.
+    if (renewalInput.validity.badInput) {
+      noteError.textContent = 'Enter a complete renewal date, or leave it empty.';
+      renewalInput.setAttribute('aria-invalid', 'true');
+      saveStatus.textContent = '';
+      renewalInput.focus();
+      return;
+    }
     // U-HW5-3: an optional field, but if the user typed something it must be a
     // real YYYY-MM-DD calendar date or the entry is rejected with a reason.
     if (renewalDate && !isValidRenewalDate(renewalDate)) {
@@ -177,8 +197,9 @@
     try {
       // E-HW5-2: send null when no date was entered so the server stores the
       // entry exactly as before, with no date attached.
+      // DDR-001 fix: the Worker reads renewal_date (snake_case, like the column).
       const entry = { service, price };
-      entry.renewalDate = renewalDate || null;
+      entry.renewal_date = renewalDate || null;
       if (!(await saveNote(entry))) return;
     } catch {
       showError('Could not reach the server. Your entry is still here; try again.');
