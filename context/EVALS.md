@@ -67,7 +67,7 @@ the HW5 template. Sorted by count, then by source.
 | Date shown one day early in US time zones if formatted as local time | 1 | caught in review before commit (Claude Code) | cannot verify → tested |
 
 ## 5. Evals
-- **Code:** `npm test` with `API=<worker url>`; 7 tests, 7 passing on the HW5 Worker run locally (docs/npm-test-local.png); 4 of 7 on the HW4 Worker, which is what the deployed URL runs until the migration and deploy are done. Screenshot in README.
+- **Code:** `npm test` with `API=<worker url>`; 7 tests, **7 passing against the deployed Worker** (October 2, 2026, docs/npm-test.png) and 7 passing locally before deploying (docs/npm-test-local.png); 4 of 7 on the HW4 Worker, so the three HW5 tests check the feature. Screenshot in README.
 - **Judgment:** docs/JUDGMENT.md, 12 questions, two graders (me, and Claude as Grader 2 with its prompt pasted), agreement 12 of 12 (100%). Two questions (#3 SQL, #12 target size) were "?" on my first pass and were rewritten (JUDGMENT.md → Disagreements).
 
 ## Verification table (carried from HW4)

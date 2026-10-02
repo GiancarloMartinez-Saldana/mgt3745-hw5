@@ -150,16 +150,20 @@ editing an existing entry's date (delete and re-add instead).
 `worker.js` on wrangler's local D1, after running
 `migrations/0001_add_renewal_date.sql` on a copy of the HW4 table), with the
 page served on `http://127.0.0.1:5500` and driven in Chromium by Playwright.
-`npm test` ran the same rows as code. The deployed Worker still runs the HW4
-code until the migration and deploy are done (README → How to Run), so the
-deployed walk is still to come.
+`npm test` ran the same rows as code. **Deployed, October 2, 2026:** after
+`npm run db:migrate` (1 query, the 5 existing rows kept with no date) and
+`npm run deploy`, `npm test` against
+`https://mgt3745-hw4.mgt3745-hw4-giancarlo.workers.dev` passed 7 of 7
+([docs/npm-test.png](../docs/npm-test.png)), so the Worker rows below hold on
+the live table too. "PASS (local)" remains only where the check is a browser
+walk of the page.
 
 | Statement | HW4 verdict | HW5 verdict | Reason / evidence |
 |---|---|---|---|
 | O-HW5-1: renewal date shown when given (HW3 #5) | FAIL | PASS (local) | Netflix saved with 2026-10-15 shows "Renews Oct 15, 2026" under its price in a `<time datetime="2026-10-15">`. A browser set to Los Angeles time shows the same day, not Oct 14. See [docs/renewal-date.png](../docs/renewal-date.png). |
-| E-HW5-2: no date still saves, shown with no date | — | PASS (local) | Peacock saved with the date left empty: 201, row shows no "Renews" line, `renewal_date` is `null` in GET. eval #6. |
-| U-HW5-3: bad date rejected with a reason | — | PASS (local) | `2026-02-30`, `10/15/2026`, `2026-13-01` and the number `20261015` each return `400 renewal date must be a real date in YYYY-MM-DD form`, nothing stored (eval #7). A forced bad date on the page showed "Could not save: renewal date must be… Your entry is still here." and kept the typed name. |
-| S-HW5-4: date stored on the server | — | PASS (local) | A fresh browser context (no site data) shows all three renewal dates, because they come from GET, not the browser. eval #5. |
+| E-HW5-2: no date still saves, shown with no date | — | PASS | Peacock saved with the date left empty: 201, row shows no "Renews" line, `renewal_date` is `null` in GET. eval #6. |
+| U-HW5-3: bad date rejected with a reason | — | PASS | `2026-02-30`, `10/15/2026`, `2026-13-01` and the number `20261015` each return `400 renewal date must be a real date in YYYY-MM-DD form`, nothing stored (eval #7). A forced bad date on the page showed "Could not save: renewal date must be… Your entry is still here." and kept the typed name. |
+| S-HW5-4: date stored on the server | — | PASS | A fresh browser context (no site data) shows all three renewal dates, because they come from GET, not the browser. eval #5. |
 | HTML in a name is not executed (with a date) | PASS | PASS (local) | `<img src=x onerror=alert(1)>` with a date saved: no `<img>` in the list. |
-| HW4 rows (order, store, price rule, missing name) | PASS | PASS (local) | evals #1–#4, unchanged assertions. |
+| HW4 rows (order, store, price rule, missing name) | PASS | PASS | evals #1–#4, unchanged assertions. |
 | Same evals against the HW4 Worker | — | 4 of 7 | The three HW5 tests fail on the HW4 Worker, so they test the feature, not the setup. |

@@ -60,7 +60,9 @@ Run the code eval (7 tests; it deletes what it creates):
 API=https://mgt3745-hw4.mgt3745-hw4-giancarlo.workers.dev npm test
 ```
 
-![npm test: 7 of 7 passing against the HW5 Worker run locally](docs/npm-test-local.png)
+![npm test: 7 of 7 passing against the deployed Worker, right after npm run deploy](docs/npm-test.png)
+
+The same run against the Worker on `npm run dev` before deploying is in [docs/npm-test-local.png](docs/npm-test-local.png).
 
 To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --local --file=schema.sql`, then `npm run dev` (port 8787), then `API=http://127.0.0.1:8787 npm test`. Add `?serverDown` to the page URL to test the outage message.
 
@@ -68,10 +70,10 @@ To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --lo
 
 | Feature | EARS statement | Verdict |
 |---|---|---|
-| **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS (local), was FAIL in HW3/HW4 |
-| **No date still saves (HW5)** | WHEN a valid subscription is submitted without a renewal date, THE SYSTEM SHALL store it and show it with no date | PASS (local) |
-| **Bad date rejected (HW5)** | IF a submitted renewal date is not a real calendar date in YYYY-MM-DD form, THEN THE SYSTEM SHALL reject the entry and say why | PASS (local) |
-| **Date on the server (HW5)** | THE SYSTEM SHALL store the renewal date on the server with the rest of the entry | PASS (local) |
+| **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS (local page walk; the deployed Worker stores and returns it), was FAIL in HW3/HW4 |
+| **No date still saves (HW5)** | WHEN a valid subscription is submitted without a renewal date, THE SYSTEM SHALL store it and show it with no date | PASS |
+| **Bad date rejected (HW5)** | IF a submitted renewal date is not a real calendar date in YYYY-MM-DD form, THEN THE SYSTEM SHALL reject the entry and say why | PASS |
+| **Date on the server (HW5)** | THE SYSTEM SHALL store the renewal date on the server with the rest of the entry | PASS |
 | Save a subscription | WHEN a valid subscription is submitted, THE SYSTEM SHALL store it on the server and confirm it on the page | PASS |
 | Reject a bad price | IF a submitted price is not a number greater than 0, THEN THE SYSTEM SHALL reject it and say why | PASS |
 | Reject a bad name | IF the service name is missing, empty, or longer than 200 characters, THEN THE SYSTEM SHALL reject it and say why | PASS |
@@ -80,8 +82,10 @@ To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --lo
 | Network down / 500 / 400 | IF the server can't be reached or returns an error, THEN THE SYSTEM SHALL tell the user on the page | PASS |
 | Two clients, one table | Private per-user lists | DEFERRED (ADR-002 → ADR-003) |
 
-"PASS (local)" means it was walked against the HW5 `worker.js` running under
-`npm run dev`. The deployed Worker gets the feature after step 3 of How to Run.
+The HW5 rows pass `npm test` against the deployed Worker (October 2, 2026,
+after `npm run db:migrate` and `npm run deploy`; screenshot above). The page
+itself (the "Renews …" line) was walked in a browser against the same
+`worker.js` locally.
 The full tables are in [FEATURES.md → HW5: Verification](context/FEATURES.md#hw5-verification)
 and [HW4: Verification](context/FEATURES.md#hw4-verification). The evals and
 the error-analysis log are in [EVALS.md](context/EVALS.md).
