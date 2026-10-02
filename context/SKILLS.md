@@ -15,7 +15,7 @@ errors; never throw to the console.
 **Paste, in order:** PROJECT, FEATURES (rows marked), STYLE, STANDARDS, TOOLS, then the current page files. One instruction line naming the files it may touch.
 **Check first:** the diff's file list, then innerHTML / concatenated SQL, then whether it used the tokens.
 **Also paste:** the instruction line, and say which rows *cannot* be met from the files allowed (S-HW5-4 needs the Worker), so the tool asks instead of inventing storage.
-**Reliably wrong (this week, EVALS.md section 4):** changes that need the server (a new column, a migration) when the paste only allows page files; template code written for another schema (`{ text }` vs `{ service, price }`); style details no test looks at (focus ring overlap, raw hex instead of tokens). *Add the bolt / AI Studio rows once read.*
+**Reliably wrong (this week, EVALS.md section 4):** changes that need the server (a new column, a migration) when the paste only allows page files; template code written for another schema (`{ text }` vs `{ service, price }`); style details no test looks at (focus ring overlap, raw hex instead of tokens). Both builders: claimed the server row was done when they could not touch the server, guessed the field name (`renewalDate`), used a text box for a date. bolt: local-time vs UTC date check. AI Studio: an unused React/Tailwind/Gemini project around the three files. **So check first:** the POST body's field names against `worker.js`, and the zip's file list against the instruction line.
 
 ## Pattern: add a field end to end (page → Worker → D1)
 **When:** a feature needs one more value stored per entry (HW5: renewal date).

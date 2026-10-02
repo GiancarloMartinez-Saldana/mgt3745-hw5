@@ -68,6 +68,9 @@ To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --lo
 
 ## Status
 
+**Pass count (EVALS.md):** `npm test` 7 of 7 against the deployed Worker; the
+four HW5 rows 4 of 4 on the deployed page; judgment eval 12 of 12 agreement.
+
 | Feature | EARS statement | Verdict |
 |---|---|---|
 | **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS, was FAIL in HW3/HW4 |
@@ -117,5 +120,10 @@ HW5 context files and docs were done by Claude Code (DDR-003). It ran the
 tests and a browser walk itself, and the commits show what it changed. I
 reviewed the diff and filled the "You" column of [JUDGMENT.md](docs/JUDGMENT.md)
 without looking at its answers.
+
+**Stake timing:** the RAT and Prediction Stake in EVALS.md were written after
+Session B, not in class: drafted by Claude Code, reviewed by me, and committed
+October 1 at 3:59 PM ET, before bolt.new ran (4:21 PM) and before either zip
+was committed (8:16 PM and 8:31 PM).
 
 Hours spent on this assignment: 9.
