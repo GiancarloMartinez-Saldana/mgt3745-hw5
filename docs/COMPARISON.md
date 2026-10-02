@@ -8,7 +8,7 @@
 | Added a dependency or framework? | No | Yes: 19 packages (React, Tailwind, Gemini SDK…) | No |
 | [HW5 DELEGATE] rows passing | 1 / 4 | 2 / 4 (4 / 4 on the HW5 Worker) | 4 / 4 (local) |
 | Noticed S-HW5-4 needs the server? | No: claimed it persists | No: claimed sending it in the POST was enough; did not ask | Yes: added a column and a migration |
-| Time from paste to usable output | ___ | ___ | about 1 hour, including tests |
+| Time from paste to usable output | ~2 min | ~4 min | about 1 hour, including tests |
 
 **Which I would delegate to again, and for what.** AI Studio wrote the better code overall: 2 of 4 rows passed against my real Worker compared with only 1 for bolt, its date check works in every time zone, and it never threw an error in the console. However, it followed my instruction line much worse. I specifically said “these three files only” and “do not add dependencies,” yet AI Studio handed back 10 extra files and 19 packages, including React, Tailwind, and a Gemini SDK, that my page never uses. bolt stayed much closer to the boundaries I gave it, but its code was buggier: its date check rejects every valid date for anyone east of UTC, and entering an impossible month causes a console crash. Because of that split, I would use AI Studio again for a small, self-contained piece of page logic because its actual code was more reliable, but I would immediately delete anything outside the files I named. I would not trust either tool with anything that touches the server.
 
