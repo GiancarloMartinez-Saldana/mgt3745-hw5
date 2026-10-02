@@ -70,7 +70,7 @@ To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --lo
 
 | Feature | EARS statement | Verdict |
 |---|---|---|
-| **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS (local page walk; the deployed Worker stores and returns it), was FAIL in HW3/HW4 |
+| **Renewal date shown (HW5)** | WHERE a subscription entry includes a renewal date, THE SYSTEM SHALL display that date alongside the service | PASS, was FAIL in HW3/HW4 |
 | **No date still saves (HW5)** | WHEN a valid subscription is submitted without a renewal date, THE SYSTEM SHALL store it and show it with no date | PASS |
 | **Bad date rejected (HW5)** | IF a submitted renewal date is not a real calendar date in YYYY-MM-DD form, THEN THE SYSTEM SHALL reject the entry and say why | PASS |
 | **Date on the server (HW5)** | THE SYSTEM SHALL store the renewal date on the server with the rest of the entry | PASS |
@@ -83,9 +83,9 @@ To run everything locally instead: `npx wrangler d1 execute mgt3745-entries --lo
 | Two clients, one table | Private per-user lists | DEFERRED (ADR-002 → ADR-003) |
 
 The HW5 rows pass `npm test` against the deployed Worker (October 2, 2026,
-after `npm run db:migrate` and `npm run deploy`; screenshot above). The page
-itself (the "Renews …" line) was walked in a browser against the same
-`worker.js` locally.
+after `npm run db:migrate` and `npm run deploy`; screenshot above). I then walked
+the page by hand on the deployed Worker: an entry saved with a date showed
+"Renews …", and still did after a reload.
 The full tables are in [FEATURES.md → HW5: Verification](context/FEATURES.md#hw5-verification)
 and [HW4: Verification](context/FEATURES.md#hw4-verification). The evals and
 the error-analysis log are in [EVALS.md](context/EVALS.md).
