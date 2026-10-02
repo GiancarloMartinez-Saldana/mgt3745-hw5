@@ -42,4 +42,4 @@ input[aria-invalid="true"] { border: 2px solid var(--color-error); }
    DDR-001 fix: bolt made it 0.9rem (14.4px, under font-size-min) in raw
    #526578; it is information, not decoration, so it uses the body size and
    color-text like the rest of the row. */
-#note-list .renewal-date { flex: 1 1 100%; font-size: var(--font-size-min); color: var(--color-text); }
+#note-list .renewal-date { flex: 1 1 100%; margin: -0.75rem 0 0.75rem; line-height: 1.5; font-size: var(--font-size-min); color: var(--color-text); }
