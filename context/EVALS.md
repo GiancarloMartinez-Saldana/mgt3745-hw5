@@ -16,13 +16,13 @@ on a cleared cache (checklist question 5).
 ## 2. Prediction Stake (before build, October 1, 2026, committed before any tool saw the spec)
 <!-- At least one of each. Never edit the prediction text; add resolutions below it. -->
 - **Tight:** At least 2 of the 4 [HW5 DELEGATE] EARS rows will pass on each tool's first output, and S-HW5-4 (stored on the server) will not pass on either.
-  - Resolved <date>: bolt _ of 4, AI Studio _ of 4. S-HW5-4: ...
+  - Resolved October 2, 2026: **missed.** bolt 1 of 4, AI Studio 2 of 4, both against the HW4 Worker they were given. AI Studio met the bar; bolt did not. The S-HW5-4 half **held**: neither tool built storage. (AI Studio reaches 4 of 4 against the HW5 Worker only because it sent the date under two guessed names, `renewalDate` and `renewal_date`, and one happened to match.)
 - **Loose:** bolt will follow STYLE.md tokens better than AI Studio.
-  - Resolved <date>: ...
+  - Resolved October 2, 2026: **missed, the other way round.** AI Studio added no colors or font sizes of its own; its only CSS change was label spacing. bolt added `color: #526578` as raw hex and a `0.9rem` (14.4px) date line, under font-size-min 16px.
 - **Open:** At least one tool will introduce a dependency or a framework (React, a date library, Tailwind) I did not ask for. Resolves when I read each zip's package.json and `<script>`/`<link>` tags.
-  - Resolved <date>: ...
+  - Resolved October 2, 2026: **held.** AI Studio's zip adds a `package.json` with 10 dependencies and 9 devDependencies: React 19, Vite, Tailwind, the Gemini SDK (`@google/genai`), Express, dotenv, motion and lucide-react, plus a `.env.example` asking for a `GEMINI_API_KEY`. None of it is used by the three page files (`src/App.tsx` renders an empty `<div>` into a `#root` that does not exist). bolt added an empty `package-lock.json` with no packages.
 - **Tight (integration):** Integrating the feature into the real app will need a change outside the three page files (`worker.js` and `schema.sql` at least), which the delegation instruction forbade the tool from touching.
-  - Resolved <date>: ...
+  - Resolved October 1, 2026: **held.** The shipped feature needed `worker.js`, `schema.sql` and `migrations/0001_add_renewal_date.sql` (DDR-003).
 
 ## 3. Success criteria
 | EARS row (feature) | Checked by | Where |
@@ -36,18 +36,24 @@ on a cleared cache (checklist question 5).
 
 ## 4. Error-analysis log
 <!-- Every failure observed, a few words each, counted, sorted by count. -->
-Rows so far come from integrating the feature with Claude Code and from the
-HW5 template itself. bolt.new and AI Studio rows are added from
-docs/CHECKLIST.md when those runs are read; re-sort by count then.
+From bolt-001.zip, aistudio-001.zip (both walked in Chromium against the HW4
+and HW5 Workers, in New York and Berlin time), the integration (DDR-003) and
+the HW5 template. Sorted by count, then by source.
 
 | Failure (a few words) | Count | Source | Category |
 |---|---|---|---|
-| bolt: sent `renewalDate`, Worker never stores it; claimed "persists server-side", did not ask | 1 | bolt | architecture |
+| Did not store the date on the server (S-HW5-4 fails against the Worker it was given) and did not ask, though the instruction said to | 2 | bolt, AI Studio | architecture |
+| Date field is a text box with a placeholder, not `type="date"` | 2 | bolt, AI Studio | STYLE |
+| Touched files outside the three named (bolt: empty package-lock.json; AI Studio: 10 files) | 2 | bolt, AI Studio | scope |
+| AI Studio: React/Vite/Tailwind/Gemini/Express project added, 19 packages, none used | 1 | AI Studio | dependency |
+| AI Studio: `.env.example` asks for a `GEMINI_API_KEY` the feature never needs (a credential slot) | 1 | AI Studio | STANDARDS |
+| AI Studio: guessed the field name, sends both `renewalDate` and `renewal_date`, reads either | 1 | AI Studio | architecture |
+| AI Studio: against the HW4 Worker the date is silently dropped and the page still says "Subscription saved." | 1 | AI Studio | EARS |
+| bolt: sent only `renewalDate`; claimed it "persists server-side" | 1 | bolt | architecture |
 | bolt: date check rejects every valid date east of UTC (local midnight compared to UTC) | 1 | bolt | EARS |
 | bolt: `2026-13-45` throws "Invalid time value" in the console instead of showing a message | 1 | bolt | STANDARDS |
 | bolt: date text 0.9rem (below font-size-min 16px) and raw hex, not a token | 1 | bolt | STYLE |
-| bolt: added an empty package-lock.json outside the three files | 1 | bolt | scope |
-| bolt: date input is a text box with a placeholder, not `type="date"`; help text not updated | 1 | bolt | STYLE |
+| bolt: help text not updated to mention the date | 1 | bolt | STYLE |
 | bolt: preview would not run ("No preview available") | 1 | bolt | cannot verify |
 | Feature needed files outside the three allowed (worker.js, schema.sql, a migration) | 1 | integration (Claude Code) | scope |
 | Deployed table has no renewal_date column; deploying first would 500 every save | 1 | integration (Claude Code) | architecture |
