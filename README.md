@@ -90,7 +90,7 @@ the error-analysis log are in [EVALS.md](context/EVALS.md).
 
 - [DDR-001](docs/DDR-001.md): renewal date (F-05), bolt.new and Google AI Studio, Session B. Net hours: −2 (neither output kept)
 - [DDR-002](docs/DDR-002.md): the HW4 delegation, written up. It was Claude Code, not Copilot; the DDR explains why.
-- [DDR-003](docs/DDR-003.md): renewal date integrated into the real app with Claude Code. Net hours: ___
+- [DDR-003](docs/DDR-003.md): renewal date integrated into the real app with Claude Code. Net hours: +5
 - [Comparison note](docs/COMPARISON.md), [checklist](docs/CHECKLIST.md), [judgment eval](docs/JUDGMENT.md)
 - What the tools were given: [delegated/PASTE.md](delegated/PASTE.md). What they returned: `delegated/*.zip`.
 
