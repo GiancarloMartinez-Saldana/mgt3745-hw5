@@ -1,9 +1,5 @@
 # Comparison: bolt.new vs Google AI Studio (vs the integration that shipped)
 
-> Half a page, written after both runs. The table is filled from
-> docs/CHECKLIST.md; the Claude Code column is already filled from DDR-003.
-> Replace every `___`.
-
 | | bolt.new | AI Studio | Claude Code (DDR-003) |
 |---|---|---|---|
 | Stayed in the three files? | Almost: one empty lockfile | No: 10 extra files | No, by design: allowed to change the Worker |
@@ -14,15 +10,8 @@
 | Noticed S-HW5-4 needs the server? | No: claimed it persists | No: claimed sending it in the POST was enough; did not ask | Yes: added a column and a migration |
 | Time from paste to usable output | ___ | ___ | about 1 hour, including tests |
 
-**Which I would delegate to again, and for what.** ___ (one paragraph: which
-tool came closer to the spec on the first try, and was it the instructions it
-followed or the code it wrote?)
+**Which I would delegate to again, and for what.** AI Studio wrote the better code overall: 2 of 4 rows passed against my real Worker compared with only 1 for bolt, its date check works in every time zone, and it never threw an error in the console. However, it followed my instruction line much worse. I specifically said “these three files only” and “do not add dependencies,” yet AI Studio handed back 10 extra files and 19 packages, including React, Tailwind, and a Gemini SDK, that my page never uses. bolt stayed much closer to the boundaries I gave it, but its code was buggier: its date check rejects every valid date for anyone east of UTC, and entering an impossible month causes a console crash. Because of that split, I would use AI Studio again for a small, self-contained piece of page logic because its actual code was more reliable, but I would immediately delete anything outside the files I named. I would not trust either tool with anything that touches the server.
 
-**What the stake predicted and what happened.** ___ (one paragraph: did the
-RAT hold? Point to the resolutions under EVALS.md section 2: tight 2 of 4,
-loose bolt-follows-tokens-better, open new dependency, and the integration
-needing worker.js.)
+**What the stake predicted and what happened.** My riskiest assumption was that a tool given only the page files would still send the date through my Worker instead of inventing its own storage. Half of that assumption held because neither tool used localStorage, but neither one actually stored the date either. Both simply added the date to the request and assumed the server would handle it, so the “stored on the server” row failed for both, exactly as I predicted. My other predictions were less accurate. I guessed that at least 2 of 4 rows would pass for each tool, but bolt only passed 1. I also predicted that bolt would follow my STYLE.md better, but the opposite happened: bolt used a raw hex color and 14.4px text even though my minimum was 16px, while AI Studio added no styles of its own. My prediction that a tool would sneak in a dependency was correct, although AI Studio did so by a much larger amount than I expected.
 
-**What the difference teaches about the instruction line.** ___ (one or two
-sentences: "in these three files only" made S-HW5-4 impossible on purpose.
-Did the tool ask, as the line told it to, or guess?)
+**What the difference teaches about the instruction line.** The biggest lesson came from the instruction line itself. Saying “in these three files only” made the storage row impossible on purpose, and the instructions also said to ask before changing anything else. Neither tool asked. Instead, both claimed that the feature was complete, including storage, even though testing showed otherwise. bolt said the date “persists server-side,” while AI Studio described its work as involving three files even though its output contained ten additional files. These problems only became obvious after I ran the code and inspected the output myself. Next time, I would add a line explicitly telling the tool to identify any checklist row it cannot complete instead of pretending it is finished. I would also continue reading the zip and testing the actual code rather than trusting the tool’s summary, because the summary is essentially the tool grading its own work rather than evidence that the requirements were actually met.
