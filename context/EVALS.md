@@ -42,6 +42,13 @@ docs/CHECKLIST.md when those runs are read; re-sort by count then.
 
 | Failure (a few words) | Count | Source | Category |
 |---|---|---|---|
+| bolt: sent `renewalDate`, Worker never stores it; claimed "persists server-side", did not ask | 1 | bolt | architecture |
+| bolt: date check rejects every valid date east of UTC (local midnight compared to UTC) | 1 | bolt | EARS |
+| bolt: `2026-13-45` throws "Invalid time value" in the console instead of showing a message | 1 | bolt | STANDARDS |
+| bolt: date text 0.9rem (below font-size-min 16px) and raw hex, not a token | 1 | bolt | STYLE |
+| bolt: added an empty package-lock.json outside the three files | 1 | bolt | scope |
+| bolt: date input is a text box with a placeholder, not `type="date"`; help text not updated | 1 | bolt | STYLE |
+| bolt: preview would not run ("No preview available") | 1 | bolt | cannot verify |
 | Feature needed files outside the three allowed (worker.js, schema.sql, a migration) | 1 | integration (Claude Code) | scope |
 | Deployed table has no renewal_date column; deploying first would 500 every save | 1 | integration (Claude Code) | architecture |
 | Starter test posted `{ text }`; this table stores `service` + `price` | 1 | HW5 template | EARS |
