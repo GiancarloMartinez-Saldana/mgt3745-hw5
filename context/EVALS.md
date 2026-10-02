@@ -56,6 +56,8 @@ the HW5 template. Sorted by count, then by source.
 | bolt: date text 0.9rem (below font-size-min 16px) and raw hex, not a token | 1 | bolt | STYLE |
 | bolt: help text not updated to mention the date | 1 | bolt | STYLE |
 | bolt: preview would not run ("No preview available") | 1 | bolt | cannot verify |
+| Grader 2 (Claude) gave the right answer on JUDGMENT #3 with a false citation ("all three prepare() calls use ? + bind()") | 1 | JUDGMENT.md | cannot verify |
+| Rubric questions a human could not answer as written (#3 SQL with no user value, #12 how to check 44px) | 2 | JUDGMENT.md | rubric |
 | Feature needed files outside the three allowed (worker.js, schema.sql, a migration) | 1 | integration (Claude Code) | scope |
 | Deployed table has no renewal_date column; deploying first would 500 every save | 1 | integration (Claude Code) | architecture |
 | Starter test posted `{ text }`; this table stores `service` + `price` | 1 | HW5 template | EARS |
@@ -66,7 +68,7 @@ the HW5 template. Sorted by count, then by source.
 
 ## 5. Evals
 - **Code:** `npm test` with `API=<worker url>`; 7 tests, 7 passing on the HW5 Worker run locally (docs/npm-test-local.png); 4 of 7 on the HW4 Worker, which is what the deployed URL runs until the migration and deploy are done. Screenshot in README.
-- **Judgment:** docs/JUDGMENT.md, 12 questions, two graders (me, and Claude as Grader 2 with its prompt pasted), agreement __% (filled once my column is in).
+- **Judgment:** docs/JUDGMENT.md, 12 questions, two graders (me, and Claude as Grader 2 with its prompt pasted), agreement 12 of 12 (100%). Two questions (#3 SQL, #12 target size) were "?" on my first pass and were rewritten (JUDGMENT.md → Disagreements).
 
 ## Verification table (carried from HW4)
 <!-- Paste your HW4 verification table here; it is the ancestor of section 3. -->
